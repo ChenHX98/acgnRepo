@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="acgnRepo:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/acgnRepo_jar</output-path>
+    <root id="archive" name="acgnRepo.jar">
+      <element id="module-output" name="acgnRepo" />
+    </root>
+  </artifact>
+</component>
