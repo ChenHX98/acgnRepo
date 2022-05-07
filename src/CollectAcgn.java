@@ -36,6 +36,7 @@ public class CollectAcgn {
         }
         Scanner scanner=new Scanner(System.in);
         while(true){
+            System.out.println("now: "+menufile.getPath());
             System.out.println("要做什么？\n 1：新建文件夹，2：向新建文件夹写资源，3：返回上一级");
             String todo=scanner.nextLine();
             if(todo.equals("1")){
