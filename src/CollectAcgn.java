@@ -20,7 +20,6 @@ public class CollectAcgn {
         dirs=new Stack<>();
 
         Scanner scanner=new Scanner(System.in);
-
         System.out.print("请输入目录存放文件夹");
         String menu=scanner.nextLine();
         System.out.println("使用 "+menu+" 作为工作目录");
@@ -30,139 +29,68 @@ public class CollectAcgn {
 
         File menufile=new File(menu);
         File animesfile=new File(animes);
-        fdir[0]=menufile;
-        fdir[1]=animesfile;
-        operateFile1(fdir);
+        dirs.push(new File[]{menufile,animesfile});
+        System.out.println(dirs.size());
+        operateFile();
     }
 
-    private static void operateFile1(File[] dir) {
-        for(int i=0;i<2;i++){
-            if(!dir[i].exists()){
-                dir[i].mkdir();
-            }
-        }
-        Scanner scanner=new Scanner(System.in);
+    private static void operateFile() {
         while(true){
-            System.out.println();
-            System.out.println("now: "+dir[0].getPath());
-            System.out.println("要做什么？\n 1：新建文件夹，2：向新建文件夹写资源，3：返回上一级,4:回根");
-            String todo=scanner.nextLine();
-            if(todo.equals("1")){
-                System.out.println("请输入文件名");
-                todo=scanner.nextLine();
-                mkdir(todo,dir);
-                inAnimeFile(dir);
-            }else if (todo.equals("2")){
-                try {
-                    newxml(dir);
-                }catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (TransformerException e) {
-                    e.printStackTrace();
-                }
-            }else if(todo.equals("3")) {
-                break;
-            }else if(todo.equals("4")){
-                operateFile1(dir);
+            //showStack();
+            if(dirs.size()<4){
+                newAFile();
             }else{
-                mkdir(todo,dir);
-                inAnimeFile(dir);
+                newAXml();
             }
+
         }
 
     }
 
-    private static void inAnimeFile(File[] dir) {
-        for(int i=0;i<2;i++){
-            if(!dir[i].exists()){
-                dir[i].mkdir();
-            }
-        }
-        Scanner scanner=new Scanner(System.in);
-        while(true){
-            System.out.println();
-            System.out.println("now: "+dir[0].getPath());
-            System.out.println("要做什么？\n 1：新建文件夹，2：向新建文件夹写资源，3：返回上一级,4:回根");
-            String todo=scanner.nextLine();
-            if(todo.equals("1")){
-                System.out.println("请输入文件名");
-                todo=scanner.nextLine();
-                mkdir(todo,dir);
-                inSeasonFile(dir);
-            }else if (todo.equals("2")){
-                try {
-                    newxml(dir);
-                }catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (TransformerException e) {
-                    e.printStackTrace();
-                }
-            }else if(todo.equals("3")) {
-                break;
-            }else if(todo.equals("4")){
-                operateFile1(dir);
-            }else{
-                mkdir(todo,dir);
-                inSeasonFile(dir);
-            }
-        }
-    }
-
-    private static void inSeasonFile(File[] dir) {
-        for(int i=0;i<2;i++){
-            if(!dir[i].exists()){
-                dir[i].mkdir();
-            }
-        }
-        Scanner scanner=new Scanner(System.in);
-        while(true){
-            System.out.println();
-            System.out.println("now: "+dir[0].getPath());
-            System.out.println("要做什么？\n 1：新建文件夹，2：向新建文件夹写资源，3：返回上一级,4:回根");
-            String todo=scanner.nextLine();
-            if(todo.equals("1")){
-                System.out.println("请输入文件名");
-                todo=scanner.nextLine();
-                mkdir(todo,dir);
-                inKindFile(dir);
-            }else if (todo.equals("2")){
-                try {
-                    newxml(dir);
-                }catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (TransformerException e) {
-                    e.printStackTrace();
-                }
-            }else if(todo.equals("3")) {
-                break;
-            }else if(todo.equals("4")){
-                operateFile1(dir);
-            }else{
-                mkdir(todo,dir);
-                inKindFile(dir);
-            }
-        }
-    }
-
-    private static void inKindFile(File[] dir) {
-        for(int i=0;i<2;i++){
-            if(!dir[i].exists()){
-                dir[i].mkdir();
-            }
-        }
-        Scanner scanner=new Scanner(System.in);
-        try{
-            newxml(dir);
+    private static void newAXml() {
+        //newAFile();
+        try {
+            newxml();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-
     }
 
+    private static void newAFile() {
+        File[] dir=dirs.lastElement();
+        Scanner scanner=new Scanner(System.in);
+        System.out.println();
+        System.out.println("now: "+dir[0].getPath());
+        System.out.println("要做什么？\n 1：新建文件夹，2：向新建文件夹写资源，3：返回上一级,4:回根");
+        String todo=scanner.nextLine();
+        if(todo.equals("1")){
+            System.out.println("请输入文件名");
+            todo=scanner.nextLine();
+            mkdir(todo);
+        }else if (todo.equals("2")){
+            try {
+                newxml();
+            }catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (TransformerException e) {
+                e.printStackTrace();
+            }
+        }else if(todo.equals("3")) {
+            dirs.pop();
+        }else if(todo.equals("4")){
+            File[] fi=dirs.firstElement();
+            dirs.clear();
+            dirs.push(fi);
+        }else{
+            mkdir(todo);
+        }
+    }
 
-    private static void newxml(File[] dir) throws ParserConfigurationException, TransformerException {
+    private static void newxml() throws ParserConfigurationException, TransformerException {
+        File[] dir=dirs.pop();
+        //dirs.pop();
         System.out.println("新建一个xml文件");
         File f=new File(dir[0],"from.xml");
         Scanner scanner=new Scanner(System.in);
@@ -197,7 +125,9 @@ public class CollectAcgn {
         transformer.transform(new DOMSource(document),new StreamResult(f));
     }
 
-    private static void mkdir(String todo, File[] dir) {
+    private static void mkdir(String todo) {
+        File[] dir=dirs.lastElement();
+
         File submenu=new File(dir[0],todo);
         File subanime=new File(dir[1],todo);
         if(!subanime.exists()){
@@ -206,7 +136,12 @@ public class CollectAcgn {
         if(!submenu.exists()){
             submenu.mkdir();
         }
-        dir[0]=submenu;
-        dir[1]=subanime;
+        dirs.push(new File[]{submenu,subanime});
+    }
+    private static void showStack(){
+        System.out.println("Stack:");
+        for(int i=dirs.size();i<0;i++){
+            System.out.println("i: "+dirs.get(i));
+        }
     }
 }
